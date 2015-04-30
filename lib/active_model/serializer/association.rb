@@ -51,7 +51,9 @@ module ActiveModel
       end
 
       def build_serializer(object, options = {})
-        serializer_class(object, options).new(object, options.merge(self.options))
+        klass = serializer_class(object, options)
+        klass = klass.call(object) if klass.respond_to?(:call)
+        klass.new(object, options.merge(self.options))
       end
     end
   end
