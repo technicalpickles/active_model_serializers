@@ -7,15 +7,6 @@ module ActionController
         def render_using_serializer
           render json: Profile.new({ name: 'Name 1', description: 'Description 1', comments: 'Comments 1' })
         end
-
-        def render_text
-          render text: 'ok'
-        end
-
-        def render_template
-          prepend_view_path "./test/fixtures"
-          render template: "template"
-        end
       end
 
       tests MyController
@@ -40,11 +31,6 @@ module ActionController
         assert_serializer :profile_serializer
       end
 
-      def test_supports_specifying_serializers_with_a_nil
-        get :render_text
-        assert_serializer nil
-      end
-
       def test_raises_descriptive_error_message_when_serializer_was_not_rendered
         get :render_using_serializer
         e = assert_raise ActiveSupport::TestCase::Assertion do
@@ -62,10 +48,6 @@ module ActionController
         assert_match 'assert_serializer only accepts a String, Symbol, Regexp, ActiveModel::Serializer, or nil', e.message
       end
 
-      def test_does_not_overwrite_notification_subscriptions
-        get :render_template
-        assert_template "template"
-      end
     end
   end
 end
